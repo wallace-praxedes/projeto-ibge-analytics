@@ -3,7 +3,6 @@
 Pipeline de dados completo que extrai dados públicos do IBGE, armazena em PostgreSQL e exibe análises em dashboard web — tudo containerizado com Docker.
 
 ![Dashboard](docs/grafico_teste.png)
-> *Substitua a imagem acima por um print do seu dashboard funcionando*
 
 ---
 
