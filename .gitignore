@@ -1,0 +1,15 @@
+# PYTHON
+
+__pycache__/
+*.py[cod]
+venv/
+.env
+
+# DOCKER
+
+.DS_Store
+
+#IDE
+
+.vscode/
+.idea/

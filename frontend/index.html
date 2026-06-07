@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>IBGE Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+        }
+        h1 { color: #333; }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>População Brasileira</h1>
+        <canvas id="grafico"></canvas>
+    </div>
+
+<script>
+    async function carregarGrafico() {
+        const response = await fetch("http://localhost/api/populacao");
+        const dados = await response.json();
+
+        // Formata período de "202505" para "05/25"
+        const periodos = dados.map(d => {
+            const mes = d.periodo.slice(4, 6);
+            const ano = d.periodo.slice(2, 4);
+            return `${mes}/${ano}`;
+        });
+
+        const valores = dados.map(d => d.valor);
+
+        // Calcula a média
+        const media = valores.reduce((a, b) => a + b, 0) / valores.length;
+        const linhaMedia = valores.map(() => parseFloat(media.toFixed(2)));
+
+        const ctx = document.getElementById("grafico").getContext("2d");
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: periodos,
+                datasets: [
+                    {
+                        label: "População (mil pessoas)",
+                        data: valores,
+                        borderColor: "#4e79a7",
+                        backgroundColor: "rgba(78, 121, 167, 0.1)",
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 4
+                    },
+                    {
+                        label: "Média",
+                        data: linhaMedia,
+                        borderColor: "#e15759",
+                        borderWidth: 1.5,
+                        borderDash: [6, 4],
+                        pointRadius: 0,
+                        tension: 0
+                    }
+                ]
+            },
+            options: {
+                layout: {
+                    padding: { left: 20, right: 20 }
+                },
+                scales: {
+                    x: { offset: true }
+                }
+            }
+        });
+    }
+
+    carregarGrafico();
+</script>
+</body>
+</html>
